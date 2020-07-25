@@ -47,7 +47,7 @@ bindsym $mod+Return exec i3-sensible-terminal
 bindsym $mod+Shift+q kill
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec dmenu_run
+#bindsym $mod+d exec dmenu_run
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
@@ -100,15 +100,24 @@ bindsym $mod+space focus mode_toggle
 # focus the parent container
 bindsym $mod+a focus parent
 
-# focus the child container
-#bindsym $mod+d focus child
+# app launcher
+bindsym $mod+d exec rofi -show run -lines 3 -eh 2 -width 100 -padding 800 -opacity "85" -bw 0 -bc "$bg-color" -bg "$bg-color" -fg "$text-color" -hlbg "$bg-color" -hlfg "#9575cd" -font "System San Francisco Display 18"
+# setting workspaces
+# requiers awesome font
+set $workspace1 ""
+set $workspace2 ""
+set $workspace3 ""
+set $workspace4 ""
+set $workspace5 ""
+
+
 
 # switch to workspace
-bindsym $mod+1 workspace Terminals 
-bindsym $mod+2 workspace TV
-bindsym $mod+3 workspace Browser 
-bindsym $mod+4 workspace Music
-bindsym $mod+5 workspace Steam 
+bindsym $mod+1 workspace $workspace1
+bindsym $mod+2 workspace $workspace2
+bindsym $mod+3 workspace $workspace3
+bindsym $mod+4 workspace $workspace4
+bindsym $mod+5 workspace $workspace5
 bindsym $mod+6 workspace IRC
 bindsym $mod+7 workspace E-Mail
 bindsym $mod+8 workspace Random
@@ -116,11 +125,11 @@ bindsym $mod+9 workspace 9
 bindsym $mod+0 workspace 10
 
 # move focused container to workspace
-bindsym $mod+Shift+1 move container to workspace Terminals 
-bindsym $mod+Shift+2 move container to workspace TV
-bindsym $mod+Shift+3 move container to workspace Browser 
-bindsym $mod+Shift+4 move container to workspace Music
-bindsym $mod+Shift+5 move container to workspace Steam 
+bindsym $mod+Shift+1 move container to workspace $workspace1
+bindsym $mod+Shift+2 move container to workspace $workspace2
+bindsym $mod+Shift+3 move container to workspace $workspace3
+bindsym $mod+Shift+4 move container to workspace $workspace4
+bindsym $mod+Shift+5 move container to workspace $workspace5
 bindsym $mod+Shift+6 move container to workspace IRC
 bindsym $mod+Shift+7 move container to workspace E-Mail
 bindsym $mod+Shift+8 move container to workspace Random
@@ -161,19 +170,17 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 # Color settings
-
 set $bg-color 	         #2f343f
 set $inactive-bg-color   #2f343f
 set $text-color          #f3f4f5
 set $inactive-text-color #676E7D
 set $urgent-bg-color     #E53935
-
-
+# window colors
 #                       border              background         text                 indicator
-client.focused          $bg-color           $bg-color          $text-color          #424242
-client.unfocused        $inactive-bg-color $inactive-bg-color $inactive-text-color #424242
-client.focused_inactive $inactive-bg-color $inactive-bg-color $inactive-text-color #424242
-client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color          #424242
+client.focused          $bg-color           $bg-color          $text-color          #00ff00
+client.unfocused        $iancative-bg-color $inactive-bg-color $inactive-text-color #00ff00
+client.focused_inactive $iancative-bg-color $inactive-bg-color $inactive-text-color #00ff00
+client.urgent           $urgent-bg-color    $urgent-bg-color   $text-color          #00ff00
 
 #hide_edge_borders both
 
@@ -184,6 +191,16 @@ bar
 #output DVI-I-1
 	status_command i3blocks -c $HOME/.config/i3/i3blocks.conf
 	tray_output HDMI-0
+	colors {
+		background $bg-color
+	    separator #757575
+		#                  border             background         text
+		focused_workspace  $bg-color          $bg-color          $text-color
+		inactive_workspace $inactive-bg-color $inactive-bg-color $inactive-text-color
+		urgent_workspace   $urgent-bg-color   $urgent-bg-color   $text-color
+	}
+	i3bar_command i3bar --transparency
+	workspace_buttons yes
 	}
 
 
@@ -193,27 +210,15 @@ exec --no-startup-id xset dpms 600
 # exec --no-startup-id xautolock -time 30 -locker electricsheep
 
 # Lock screen
-bindsym $mod+F9 exec i3lock -c 000000 -i /home/mikoaj/Pictures/Puddle.jpg
+bindsym $mod+Shift+x exec i3lock -c "bg-color" -i /home/mikoaj/Pictures/Puddle.jpg
 
 # Floating programs
 for_window [class="Pavucontrol"] floating enable
 for_window [class="Pavucontrol"] resize shrink left 100, resize shrink right 100, resize shrink down 50, resize shrink up 50
 
-# Assign programs to specific workspace
-assign [class="Chromium"] Browser 
-assign [class="Thunar"] FileManager 
-
-# Pulse Audio Controls
-bindsym $mod+F12 exec pamixer -i 5
-bindsym $mod+F11 exec pamixer -d 5
-bindsym $mod+shift+F12 exec pamixer --set-volume 0
-
 
 # Program exec
 bindsym $mod+F5 exec pavucontrol
-bindsym $mod+F6 exec thunar
-bindsym $mod+F8 exec xfce4-screenshooter
-
 #            EDIT THIS SO IT FIT YOUR NEEDS
 # ======================================================
 
@@ -226,17 +231,21 @@ exec setxkbmap pl
 # wallpaper
 exec --no-startup-id nitrogen --restore
 
-#terminal opacitiy
-exec --no-startup-id picom -b
+# terminal opacitiy
+exec --no-startup-id picom -b -f
 
-#startup script
-exec ~/.config/i3/startup.sh
+# startup script
+exec --~/.config/i3/startup.sh
 # ======================================================
 
 #workspace specific
-assign [class="firefox"] Browser 
-assign [class="brave"] Browser 
-assign [class="steam"] Steam 
+assign [class="firefox"] $workspace2
+assign [class="brave"] $workspace2
+assign [class="Subl3"] $workspace3
+assign [class="Kite"] $workspace3
+assign [class="Thunar"] $workspace4
+assign [class="steam"] $workspace5
+assign [class="discord"] $workspace5
 # ======================================================
 
 exec i3-sensible-terminal
@@ -246,7 +255,7 @@ bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #i
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
 
-# Sreen brightness controls
+# Screen brightness controls
 #bindsym XF86MonBrightnessUp exec xbacklight -inc 20 # increase screen brightness
 #bindsym XF86MonBrightnessDown exec xbacklight -dec 20 # decrease screen brightness
 bindsym XF86MonBrightnessUp exec "light -A 5
@@ -259,3 +268,6 @@ bindsym XF86AudioPlay exec playerctl play
 bindsym XF86AudioPause exec playerctl pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
+
+# sticky window
+bindsym $mod+Shift+s sticky toggle
