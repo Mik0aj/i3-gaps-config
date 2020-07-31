@@ -235,7 +235,7 @@ exec --no-startup-id nitrogen --restore
 exec --no-startup-id picom -b -f
 
 # startup script
-exec --~/.config/i3/startup.sh
+exec --no-startup-id nm-applet
 # ======================================================
 
 #workspace specific
